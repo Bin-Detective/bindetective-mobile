@@ -1,1 +1,0 @@
-# bindetective-mobile
