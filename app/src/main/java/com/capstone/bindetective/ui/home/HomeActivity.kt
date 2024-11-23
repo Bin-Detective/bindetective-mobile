@@ -1,11 +1,11 @@
-package com.capstone.bindetective
+package com.capstone.bindetective.ui.home
 
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.capstone.bindetective.ProfileFragment
+import com.capstone.bindetective.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class HomeActivity : AppCompatActivity() {
@@ -16,18 +16,6 @@ class HomeActivity : AppCompatActivity() {
 
         // Initialize BottomNavigationView
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigation)
-
-        // Set item selection listener to switch between fragments
-        bottomNav.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.home -> {
-                    // Anda bisa menambahkan HomeFragment di sini jika dibutuhkan di masa depan
-                    false
-                }
-                R.id.profile -> loadFragment(ProfileFragment()) // ProfileFragment
-                else -> false
-            }
-        }
 
         // Retrieve data passed from intent
         val displayName = intent.getStringExtra("name") ?: "Unknown User"

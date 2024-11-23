@@ -13,12 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BinDetective">
         <activity
-            android:name=".HomeActivity" />
+            android:name=".ui.home.HomeActivity" />
         <activity
-            android:name=".ProfileActivity"
-            android:exported="false" />
-        <activity
-            android:name=".SignInActivity"
+            android:name=".ui.signin.SignInActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,8 +24,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
-            android:exported="true" />
+            android:name=".ui.main.BottomMainActivity"
+            android:exported="true">
+        </activity>
     </application>
 
 </manifest>
