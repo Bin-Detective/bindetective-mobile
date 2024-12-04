@@ -1,9 +1,10 @@
 package com.capstone.bindetective.model
 
 data class User(
-    val userId: String = "",  // Default empty value for userId
+    val userId: String,
     val userName: String,
-    val dateOfBirth: String? = null  // Birthdate is nullable
+    val dateOfBirth: String? = null,
+    val profilePictureUrl: String? = null
 )
 
 

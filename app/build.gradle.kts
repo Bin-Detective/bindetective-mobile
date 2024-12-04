@@ -48,6 +48,9 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.lifecycle.viewmodel.android)
     implementation(libs.androidx.material3.android)
+    implementation(libs.play.services.fido)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -67,19 +70,14 @@ dependencies {
     // Retrofit
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-
-
-        implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
-        implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.5.1")
-        implementation ("com.squareup.okhttp3:logging-interceptor:4.9.3")
-
-
-        implementation ("com.squareup.okhttp3:okhttp:4.10.0")
-        implementation ("com.squareup.okhttp3:logging-interceptor:4.10.0")
-        implementation ("org.json:json:20210307")
-
-        implementation ("com.github.bumptech.glide:glide:4.16.0")
-
-        implementation ("com.google.android.material:material:1.9.0")
-        implementation ("androidx.fragment:fragment-ktx:1.5.5")
-    }
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
+    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.5.1")
+    implementation ("com.squareup.okhttp3:logging-interceptor:4.9.3")
+    implementation ("com.squareup.okhttp3:okhttp:4.10.0")
+    implementation ("com.squareup.okhttp3:logging-interceptor:4.10.0")
+    implementation ("org.json:json:20210307")
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
+    implementation ("com.google.android.material:material:1.9.0")
+    implementation ("androidx.fragment:fragment-ktx:1.5.5")
+    implementation ("com.squareup.picasso:picasso:2.71828")
+}

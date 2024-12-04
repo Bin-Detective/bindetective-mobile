@@ -13,8 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BinDetective">
         <activity
-            android:name=".ui.home.HomeActivity" />
-        <activity
             android:name=".ui.signin.SignInActivity"
             android:exported="true">
             <intent-filter>
