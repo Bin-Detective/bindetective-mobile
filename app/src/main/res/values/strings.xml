@@ -2,4 +2,25 @@
     <string name="app_name">Bin Detective</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+<<<<<<< Updated upstream
+=======
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="upload">Upload</string>
+    <string name="image_invalid">Invalid Image!</string>
+    <string name="loading">Loading...</string>
+    <string name="error_uploading_image">Error uploading image</string>
+    <string name="error_no_image_selected">No image selected</string>
+    <string name="error_no_image_captured">No image captured</string>
+    <string name="error_no_image_uploaded">No image uploaded</string>
+    <string name="image_preview">Image preview</string>
+    <string name="image_uploaded">Image uploaded</string>
+    <string name="image_captured">Image captured</string>
+    <string name="image_selected">Image selected</string>
+    <string name="image_uploading">Image uploading</string>
+    <string name="image_upload">Image upload</string>
+    <string name="image_upload_failed">Image upload failed</string>
+    <string name="image_upload_successful">Image upload successful</string>
+
+>>>>>>> Stashed changes
 </resources>

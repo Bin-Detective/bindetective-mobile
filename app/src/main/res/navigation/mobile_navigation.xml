@@ -1,6 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+<<<<<<< Updated upstream
     android:id="@+id/mobile_navigation">
 
 </navigation>
+=======
+    app:startDestination="@id/cameraFragment">
+
+    <fragment
+        android:id="@+id/cameraFragment"
+        android:name="com.capstone.bindetective.ui.camera.CameraFragment"
+        android:label="Camera" />
+
+    <fragment
+        android:id="@+id/resultFragment"
+        android:name="com.capstone.bindetective.ui.result.ResultFragment"
+        android:label="Result" />
+
+</navigation>
+>>>>>>> Stashed changes

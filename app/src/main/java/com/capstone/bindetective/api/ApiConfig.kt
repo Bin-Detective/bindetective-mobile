@@ -6,11 +6,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiConfig {
-    private const val BASE_URL = "https://bin-detective-476908432279.asia-southeast2.run.app/"  // Replace with your actual API URL
+    private const val BASE_URL = "https://bin-detective-476908432279.asia-southeast2.run.app/"
 
     fun getApiService(): ApiService {
         // Set logging level manually
-        val loggingInterceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)  // Adjust based on your needs
+        val loggingInterceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -21,6 +21,7 @@ object ApiConfig {
                     .build()
             )
             .build()
+
         return retrofit.create(ApiService::class.java)
     }
 }
