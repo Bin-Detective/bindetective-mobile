@@ -17,11 +17,10 @@ import retrofit2.Response
 import java.io.File
 
 class CameraViewModel(context: Context) : ViewModel() {
-
     private val _predictionResult = MutableLiveData<Result<PredictResponse>>()
     val predictionResult: LiveData<Result<PredictResponse>> get() = _predictionResult
 
-    val apiService = ApiConfig.getApiService()
+    private val apiService = ApiConfig.getApiService()
 
     fun predictImage(file: File) {
         val requestBody = file.asRequestBody("image/*".toMediaTypeOrNull())

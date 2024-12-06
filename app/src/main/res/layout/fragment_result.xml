@@ -7,12 +7,12 @@
 
     <!-- ImageView to display the predicted image -->
     <ImageView
-        android:id="@+id/ivPredictedImage"
+        android:id="@+id/ivPreview"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_marginBottom="16dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_profile_placeholder"/> <!-- Sample image as placeholder -->
+        android:src="@drawable/ic_profile_placeholder" />
 
     <!-- TextView to display Predicted Class -->
     <TextView
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:text="Predicted Class: Plastic"
         android:textSize="18sp"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="10dp" />
 
     <!-- TextView to display Waste Type -->
     <TextView
@@ -30,15 +30,15 @@
         android:layout_height="wrap_content"
         android:text="Waste Type: Non-recyclable"
         android:textSize="16sp"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="10dp" />
 
-    <!-- TextView to display Probabilities -->
+    <!-- TextView to display Top Probabilities -->
     <TextView
         android:id="@+id/tvProbabilities"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Probabilities: Plastic=0.95, Glass=0.03, Metal=0.02"
+        android:text="Top Probabilities: Plastic=0.95, Glass=0.03, Metal=0.02"
         android:textSize="14sp"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="10dp" />
 
 </LinearLayout>

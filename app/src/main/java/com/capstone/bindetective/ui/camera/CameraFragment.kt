@@ -10,14 +10,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.capstone.bindetective.R
 import com.capstone.bindetective.databinding.FragmentCameraBinding
 import com.capstone.bindetective.ui.result.ResultFragment
+import com.capstone.bindetective.model.PredictResponse
+import com.capstone.bindetective.utils.Result
 import java.io.File
 import java.io.FileOutputStream
-import com.capstone.bindetective.utils.Result
 import java.text.DecimalFormat
 
 class CameraFragment : Fragment() {
@@ -25,7 +27,7 @@ class CameraFragment : Fragment() {
     private var _binding: FragmentCameraBinding? = null
     private val binding get() = _binding!!
     private val cameraViewModel: CameraViewModel by viewModels { CameraViewModel.Factory(requireContext()) }
-    private var currentImagePath: String? = null
+    private var selectedImageFile: File? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,18 +36,15 @@ class CameraFragment : Fragment() {
         _binding = FragmentCameraBinding.inflate(inflater, container, false)
 
         binding.btnGallery.setOnClickListener { openGallery() }
+        binding.btnUpload.setOnClickListener { uploadImage() }
 
         observeViewModel()
 
         return binding.root
     }
 
-    private fun captureImage() {
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        startActivityForResult(intent, 101)
-    }
-
     private fun openGallery() {
+        Log.d("CameraFragment", "Opening gallery...")
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(intent, 102)
     }
@@ -53,43 +52,46 @@ class CameraFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
+        Log.d("CameraFragment", "onActivityResult called: requestCode=$requestCode, resultCode=$resultCode")
+
         if (resultCode == Activity.RESULT_OK && data != null) {
-            if (requestCode == 101) { // **Camera Capture**
-                val bitmap = data.extras?.get("data") as? Bitmap
-                if (bitmap != null) {
-                    saveBitmapToFile(bitmap)?.let { file ->
-                        cameraViewModel.predictImage(file)
-                    }
-                }
-            } else if (requestCode == 102) {  // **Gallery Selection**
+            if (requestCode == 102) { // Gallery Selection
+                Log.d("CameraFragment", "Gallery selection detected")
                 val imageUri: Uri? = data.data
+
                 if (imageUri != null) {
-                    val filePath = requireContext().getExternalFilesDir(null)?.absolutePath
-                    val selectedFile = File(filePath, "gallery_image.jpg")
-                    requireContext().contentResolver.openInputStream(imageUri)?.use { input ->
-                        FileOutputStream(selectedFile).use { output ->
-                            input.copyTo(output)
-                            cameraViewModel.predictImage(selectedFile)
+                    try {
+                        val inputStream = requireContext().contentResolver.openInputStream(imageUri)
+                        val filePath = requireContext().getExternalFilesDir(null)?.absolutePath
+                        val selectedFile = File(filePath, "gallery_image.jpg")
+
+                        inputStream.use { input ->
+                            FileOutputStream(selectedFile).use { output ->
+                                if (input != null) {
+                                    input.copyTo(output)
+                                }
+                                Log.d("CameraFragment", "Gallery image copied to file: ${selectedFile.absolutePath}")
+                                selectedImageFile = selectedFile
+
+                                // Show the selected image in the preview UI
+                                binding.ivPreview.setImageURI(imageUri)
+                            }
                         }
+                    } catch (e: Exception) {
+                        Log.e("CameraFragment", "Failed to save gallery image", e)
                     }
                 }
             }
         }
     }
 
-    private fun saveBitmapToFile(bitmap: Bitmap): File? {
-        val path = requireContext().getExternalFilesDir(null)?.absolutePath ?: return null
-        val file = File(path, "camera_image.jpg")
-
-        try {
-            FileOutputStream(file).use {
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, it)
-                Log.d("CameraFragment", "File path: ${file.absolutePath}")
-            }
-            return file
-        } catch (e: Exception) {
-            Log.e("CameraFragment", "Failed to save photo", e)
-            return null
+    private fun uploadImage() {
+        val fileToUpload = selectedImageFile
+        if (fileToUpload != null) {
+            Log.d("CameraFragment", "Uploading file: ${fileToUpload.absolutePath}")
+            cameraViewModel.predictImage(fileToUpload)
+        } else {
+            Log.e("CameraFragment", "No file selected for upload")
         }
     }
 
@@ -99,19 +101,23 @@ class CameraFragment : Fragment() {
                 is Result.Success -> {
                     Log.d("CameraFragment", "Prediction Successful: ${result.data}")
 
-                    // Format probabilities to avoid scientific notation
-                    val decimalFormat = DecimalFormat("#.####################") // Up to 20 decimal places
-                    val formattedProbabilities = result.data.probabilities.mapValues {
-                        decimalFormat.format(it.value)
-                    }
-                    Log.d("CameraFragment", "Formatted Probabilities: $formattedProbabilities")
+                    val decimalFormat = DecimalFormat("#.####################")
 
-                    // Create a bundle and put the PredictResponse into it
+                    // Sort probabilities by descending order and take the top 3
+                    val topProbabilities = result.data.probabilities.entries
+                        .sortedByDescending { it.value }
+                        .take(3)
+                        .map { "${it.key}: ${decimalFormat.format(it.value)}" }
+
+                    Log.d("CameraFragment", "Top Probabilities: $topProbabilities")
+
+                    // Pass the PredictResponse and the image URI to the ResultFragment
                     val bundle = Bundle().apply {
                         putSerializable("predict_response", result.data)
+                        putString("image_uri", selectedImageFile?.toUri().toString())
+                        putStringArrayList("top_probabilities", ArrayList(topProbabilities))
                     }
 
-                    // Manually replace the fragment transaction with ResultFragment
                     requireActivity().supportFragmentManager.beginTransaction().apply {
                         replace(R.id.fragment_container, ResultFragment::class.java, bundle)
                         addToBackStack(null)

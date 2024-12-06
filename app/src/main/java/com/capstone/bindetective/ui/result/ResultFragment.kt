@@ -1,5 +1,6 @@
 package com.capstone.bindetective.ui.result
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,12 +23,27 @@ class ResultFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val response = arguments?.getSerializable("predict_response") as? PredictResponse
+        super.onViewCreated(view, savedInstanceState)
 
-        response?.let {
+        val predictionResult = arguments?.getSerializable("predict_response") as? PredictResponse
+        val imageUriString = arguments?.getString("image_uri")
+
+        predictionResult?.let {
             binding.tvPredictedClass.text = "Predicted Class: ${it.predictedClass}"
             binding.tvWasteType.text = "Waste Type: ${it.wasteType}"
-            binding.tvProbabilities.text = it.probabilities.entries.joinToString("\n") { "${it.key}: ${it.value}" }
+
+            // Get top 3 probabilities
+            val topProbabilities = it.probabilities.entries
+                .sortedByDescending { it.value }
+                .take(3)
+                .joinToString(", ") { "${it.key}=${"%.2f".format(it.value)}" }
+
+            binding.tvProbabilities.text = "Top Probabilities: $topProbabilities"
+        }
+
+        // Display the original selected image
+        if (imageUriString != null) {
+            binding.ivPreview.setImageURI(Uri.parse(imageUriString))
         }
     }
 

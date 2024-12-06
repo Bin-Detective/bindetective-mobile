@@ -1,10 +1,5 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-<<<<<<< Updated upstream
-    android:id="@+id/mobile_navigation">
-
-</navigation>
-=======
     app:startDestination="@id/cameraFragment">
 
     <fragment
@@ -18,4 +13,3 @@
         android:label="Result" />
 
 </navigation>
->>>>>>> Stashed changes
