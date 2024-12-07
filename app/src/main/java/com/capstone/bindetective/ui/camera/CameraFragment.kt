@@ -2,18 +2,19 @@ package com.capstone.bindetective.ui.camera
 
 import android.Manifest
 import android.app.Activity
+import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.capstone.bindetective.R
@@ -26,11 +27,6 @@ import java.io.FileOutputStream
 import java.text.DecimalFormat
 import java.util.UUID
 import android.os.Environment
-import java.io.IOException
-import java.io.FileInputStream
-import android.content.ContentValues
-import android.provider.MediaStore
-import androidx.core.net.toUri
 
 class CameraFragment : Fragment() {
 
@@ -89,18 +85,11 @@ class CameraFragment : Fragment() {
 
     private fun openCameraIntent() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        val photoUri = createImageFile()
+        photoUri = createImageFile() ?: return
 
-        if (photoUri != null) {
-            this.photoUri = photoUri
-
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
-            startActivityForResult(intent, REQUEST_CAMERA)
-        } else {
-            Log.e("CameraFragment", "Failed to create photo URI")
-        }
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+        startActivityForResult(intent, REQUEST_CAMERA)
     }
-
 
     private fun createImageFile(): Uri? {
         val contentValues = ContentValues().apply {
@@ -111,6 +100,37 @@ class CameraFragment : Fragment() {
         }
 
         return requireContext().contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+    }
+
+    private fun saveCapturedImage(photoUri: Uri) {
+        try {
+            val inputStream = requireContext().contentResolver.openInputStream(photoUri)
+            val externalDir = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+            val capturedFile = File(externalDir, "captured_${System.currentTimeMillis()}.jpg")
+
+            if (externalDir != null) {
+                if (!externalDir.exists()) {
+                    externalDir.mkdirs() // Ensure the directory exists
+                }
+            }
+
+            inputStream.use { input ->
+                FileOutputStream(capturedFile).use { output ->
+                    if (input != null) {
+                        input.copyTo(output)
+                    }
+                }
+            }
+
+            Log.d("CameraFragment", "Captured image saved at ${capturedFile.absolutePath}")
+            selectedImageFile = capturedFile
+
+            // Preview the captured image
+            binding.ivPreview.setImageURI(photoUri)
+
+        } catch (e: Exception) {
+            Log.e("CameraFragment", "Failed to save captured image", e)
+        }
     }
 
     private fun uploadImage() {
@@ -176,21 +196,19 @@ class CameraFragment : Fragment() {
         }
     }
 
-
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
+                REQUEST_CAMERA -> {
+                    saveCapturedImage(photoUri)
+                }
                 REQUEST_GALLERY -> {
                     val imageUri: Uri? = data?.data
                     if (imageUri != null) {
                         saveGalleryImage(imageUri)
                     }
-                }
-                REQUEST_CAMERA -> {
-                    binding.ivPreview.setImageURI(photoUri)
                 }
             }
         }
@@ -200,7 +218,13 @@ class CameraFragment : Fragment() {
         try {
             val inputStream = requireContext().contentResolver.openInputStream(imageUri)
             val externalDir = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-            val selectedFile = File(externalDir, "gallery_image.jpg")
+            val selectedFile = File(externalDir, "gallery_image_${System.currentTimeMillis()}.jpg")
+
+            if (externalDir != null) {
+                if (!externalDir.exists()) {
+                    externalDir.mkdirs()
+                }
+            }
 
             inputStream.use { input ->
                 FileOutputStream(selectedFile).use { output ->
