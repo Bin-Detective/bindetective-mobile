@@ -3,6 +3,8 @@ package com.capstone.bindetective.api
 import com.capstone.bindetective.model.ArticleResponse
 import com.capstone.bindetective.model.ArticleResponseItem
 import com.capstone.bindetective.model.CreateUserResponse
+import com.capstone.bindetective.model.PredictHistoryItem
+import com.capstone.bindetective.model.PredictHistoryResponse
 import com.capstone.bindetective.model.PredictResponse
 import com.capstone.bindetective.model.User
 import okhttp3.MultipartBody
@@ -26,4 +28,9 @@ interface ApiService {
     fun predictImage(
         @Part image: MultipartBody.Part
     ): Call<PredictResponse>
+
+    @GET("predict/collections")
+    fun getPredictHistory(@Query("userId") userId: String): Call<List<PredictHistoryItem>>
+
+
 }

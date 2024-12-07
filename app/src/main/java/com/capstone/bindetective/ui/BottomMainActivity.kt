@@ -5,8 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.capstone.bindetective.R
 import com.capstone.bindetective.databinding.ActivityBottomMainBinding
-import com.capstone.bindetective.ui.camera.CameraFragment
 import com.capstone.bindetective.ui.collection.CollectionFragment
+import com.capstone.bindetective.ui.camera.CameraFragment
 import com.capstone.bindetective.ui.home.HomeFragment
 import com.capstone.bindetective.ui.profile.ProfileFragment
 import com.capstone.bindetective.ui.quiz.QuizFragment
