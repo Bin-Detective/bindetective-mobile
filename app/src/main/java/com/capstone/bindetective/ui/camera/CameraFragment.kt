@@ -68,50 +68,49 @@ class CameraFragment : Fragment() {
     }
 
     private fun takePicture() {
-        val permissions = arrayOf(
-            Manifest.permission.CAMERA,
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
+        val cameraPermission = Manifest.permission.CAMERA
+        val readStoragePermission = Manifest.permission.READ_MEDIA_IMAGES
 
-        val missingPermissions = permissions.filter {
-            ContextCompat.checkSelfPermission(requireContext(), it) != PackageManager.PERMISSION_GRANTED
+        val permissionsToRequest = mutableListOf<String>()
+
+        if (ContextCompat.checkSelfPermission(requireContext(), cameraPermission) != PackageManager.PERMISSION_GRANTED) {
+            permissionsToRequest.add(cameraPermission)
+        }
+        if (ContextCompat.checkSelfPermission(requireContext(), readStoragePermission) != PackageManager.PERMISSION_GRANTED) {
+            permissionsToRequest.add(readStoragePermission)
         }
 
-        if (missingPermissions.isEmpty()) {
-            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-
-            val photoFile = createImageFile()
-
-            if (photoFile != null) {
-                photoUri = FileProvider.getUriForFile(
-                    requireContext(),
-                    "${requireContext().packageName}.provider",
-                    photoFile
-                )
-
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
-                startActivityForResult(intent, REQUEST_CAMERA)
-            }
+        if (permissionsToRequest.isEmpty()) {
+            openCameraIntent()
         } else {
-            requestPermissions(missingPermissions.toTypedArray(), REQUEST_CAMERA_PERMISSION)
+            requestPermissions(permissionsToRequest.toTypedArray(), REQUEST_CAMERA_PERMISSION)
         }
     }
 
-    private fun createImageFile(): File? {
-        return try {
-            val storageDir = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-            val imageFile = File(storageDir, "photo_${System.currentTimeMillis()}.jpg")
+    private fun openCameraIntent() {
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        val photoUri = createImageFile()
 
-            Log.d("CameraFragment", "File path: ${imageFile.absolutePath}")
-            Log.d("CameraFragment", "Storage Directory: ${storageDir?.absolutePath}")
+        if (photoUri != null) {
+            this.photoUri = photoUri
 
-            imageFile.createNewFile()
-            imageFile
-        } catch (e: IOException) {
-            Log.e("CameraFragment", "Failed to create file", e)
-            null
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+            startActivityForResult(intent, REQUEST_CAMERA)
+        } else {
+            Log.e("CameraFragment", "Failed to create photo URI")
         }
+    }
+
+
+    private fun createImageFile(): Uri? {
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, "photo_${System.currentTimeMillis()}.jpg")
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+            put(MediaStore.MediaColumns.DATE_ADDED, System.currentTimeMillis() / 1000)
+            put(MediaStore.MediaColumns.DATE_MODIFIED, System.currentTimeMillis() / 1000)
+        }
+
+        return requireContext().contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
     }
 
     private fun uploadImage() {
@@ -164,30 +163,19 @@ class CameraFragment : Fragment() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        when (requestCode) {
-            REQUEST_CAMERA_PERMISSION -> {
-                permissions.forEachIndexed { index, permission ->
-                    if (grantResults[index] == PackageManager.PERMISSION_GRANTED) {
-                        Log.d("CameraFragment", "Permission $permission granted")
-                    } else {
-                        Log.e("CameraFragment", "Permission $permission denied")
-                        Toast.makeText(requireContext(), "Permission $permission denied", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-
-            REQUEST_WRITE_STORAGE_PERMISSION -> {
-                permissions.forEachIndexed { index, permission ->
-                    if (grantResults[index] == PackageManager.PERMISSION_GRANTED) {
-                        Log.d("CameraFragment", "Write storage permission $permission granted")
-                    } else {
-                        Log.e("CameraFragment", "Write storage permission $permission denied")
-                        Toast.makeText(requireContext(), "Write storage permission $permission denied", Toast.LENGTH_SHORT).show()
-                    }
+        if (requestCode == REQUEST_CAMERA_PERMISSION) {
+            permissions.forEachIndexed { index, permission ->
+                if (grantResults[index] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d("CameraFragment", "Permission $permission granted")
+                    Toast.makeText(requireContext(), "Permission $permission granted", Toast.LENGTH_SHORT).show()
+                } else {
+                    Log.e("CameraFragment", "Permission $permission denied")
+                    Toast.makeText(requireContext(), "Permission $permission denied", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
+
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
