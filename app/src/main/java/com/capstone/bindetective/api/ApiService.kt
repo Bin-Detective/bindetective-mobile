@@ -30,7 +30,6 @@ interface ApiService {
     ): Call<PredictResponse>
 
     @GET("predict/collections")
-    fun getPredictHistory(@Query("userId") userId: String): Call<List<PredictHistoryItem>>
-
+    fun getPredictHistory(@Query("userId") userId: String): Call<PredictHistoryResponse>
 
 }

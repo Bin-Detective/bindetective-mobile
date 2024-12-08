@@ -10,12 +10,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.capstone.bindetective.R
 import com.capstone.bindetective.model.PredictHistoryItem
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
-class CollectionAdapter(private val predictHistoryList: List<PredictHistoryItem>) :
+class CollectionAdapter(predictHistoryList: List<PredictHistoryItem>) :
     RecyclerView.Adapter<CollectionAdapter.PredictHistoryViewHolder>() {
 
+    private val sortedPredictHistoryList: List<PredictHistoryItem> = predictHistoryList
+        .sortedByDescending { it.timestamp.seconds }  // Sort by timestamp in descending order
+
     init {
-        Log.d("CollectionAdapter", "Adapter initialized with ${predictHistoryList.size} items")
+        Log.d("CollectionAdapter", "Adapter initialized with ${sortedPredictHistoryList.size} items")
     }
 
     inner class PredictHistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -33,7 +40,7 @@ class CollectionAdapter(private val predictHistoryList: List<PredictHistoryItem>
     }
 
     override fun onBindViewHolder(holder: PredictHistoryViewHolder, position: Int) {
-        val item = predictHistoryList.getOrNull(position)
+        val item = sortedPredictHistoryList.getOrNull(position)
 
         if (item == null) {
             Log.e("CollectionAdapter", "Item at position $position is null")
@@ -42,17 +49,22 @@ class CollectionAdapter(private val predictHistoryList: List<PredictHistoryItem>
 
         Log.d("CollectionAdapter", "Binding item at position $position: $item")
 
+        // Set Predicted Class and Waste Type
         holder.tvPredictedClass.text = "Predicted Class: ${item.predictedClass}"
         holder.tvWasteType.text = "Waste Type: ${item.wasteType}"
-        holder.tvTimestamp.text = "Timestamp: ${item.timestamp}"
+
+        // Call it now from your adapter
+        val formattedTimestamp = item.timestamp.toFormattedDateTime()
+        holder.tvTimestamp.text = formattedTimestamp
 
         Log.d("CollectionAdapter", "Loading image: ${item.imageUrl}")
 
+        // Load image using Glide
         Glide.with(holder.itemView.context).load(item.imageUrl).into(holder.imageView)
     }
 
     override fun getItemCount(): Int {
-        Log.d("CollectionAdapter", "Item count: ${predictHistoryList.size}")
-        return predictHistoryList.size
+        Log.d("CollectionAdapter", "Item count: ${sortedPredictHistoryList.size}")
+        return sortedPredictHistoryList.size
     }
 }
