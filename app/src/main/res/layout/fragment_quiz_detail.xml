@@ -6,6 +6,7 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <!-- Quiz Title -->
     <TextView
         android:id="@+id/tvQuizTitle"
         android:layout_width="wrap_content"
@@ -15,6 +16,7 @@
         android:textStyle="bold"
         android:layout_marginBottom="8dp" />
 
+    <!-- Quiz Description -->
     <TextView
         android:id="@+id/tvQuizDescription"
         android:layout_width="wrap_content"
@@ -27,5 +29,15 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewQuiz"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Submit Button -->
+    <Button
+        android:id="@+id/btnSubmit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:layout_marginTop="16dp" />
+
 </LinearLayout>
