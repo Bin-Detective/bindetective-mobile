@@ -6,6 +6,7 @@ import com.capstone.bindetective.model.CreateUserResponse
 import com.capstone.bindetective.model.PredictHistoryItem
 import com.capstone.bindetective.model.PredictHistoryResponse
 import com.capstone.bindetective.model.PredictResponse
+import com.capstone.bindetective.model.QuizResponseItem
 import com.capstone.bindetective.model.User
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -31,6 +32,9 @@ interface ApiService {
 
     @GET("predict/collections")
     fun getPredictHistory(@Query("userId") userId: String): Call<List<PredictHistoryItem>>
+
+    @GET("quizzes")
+    fun getAllQuizzes(): Call<List<QuizResponseItem>>
 
 
 }
