@@ -6,6 +6,7 @@ import com.capstone.bindetective.model.CreateUserResponse
 import com.capstone.bindetective.model.PredictHistoryItem
 import com.capstone.bindetective.model.PredictHistoryResponse
 import com.capstone.bindetective.model.PredictResponse
+import com.capstone.bindetective.model.QuizDetailResponse
 import com.capstone.bindetective.model.QuizResponseItem
 import com.capstone.bindetective.model.User
 import okhttp3.MultipartBody
@@ -36,4 +37,7 @@ interface ApiService {
     @GET("quizzes")
     fun getAllQuizzes(): Call<List<QuizResponseItem>>
 
+    @GET("quizzes/{quizId}")
+    fun getQuizDetail(
+        @Path("quizId") quizId: String): Call<QuizDetailResponse>
 }
