@@ -37,7 +37,7 @@ class QuizDetailAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuizViewHolder =
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         QuizViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.row_quiz_detail, parent, false))
 
     override fun onBindViewHolder(holder: QuizViewHolder, position: Int) =

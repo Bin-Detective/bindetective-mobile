@@ -8,6 +8,8 @@ import com.capstone.bindetective.model.PredictHistoryResponse
 import com.capstone.bindetective.model.PredictResponse
 import com.capstone.bindetective.model.QuizDetailResponse
 import com.capstone.bindetective.model.QuizResponseItem
+import com.capstone.bindetective.model.SubmitQuizRequest
+import com.capstone.bindetective.model.SubmitQuizResponse
 import com.capstone.bindetective.model.User
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -40,4 +42,10 @@ interface ApiService {
     @GET("quizzes/{quizId}")
     fun getQuizDetail(
         @Path("quizId") quizId: String): Call<QuizDetailResponse>
+
+    @POST("quizzes/{quizId}/submit")
+    fun submitQuizAnswers(
+        @Path("quizId") quizId: String,
+        @Body request: SubmitQuizRequest
+    ): Call<SubmitQuizResponse>
 }
