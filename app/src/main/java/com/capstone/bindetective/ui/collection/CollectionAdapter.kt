@@ -10,6 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.capstone.bindetective.R
 import com.capstone.bindetective.model.PredictHistoryItem
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 class CollectionAdapter(private val predictHistoryList: List<PredictHistoryItem>) :
     RecyclerView.Adapter<CollectionAdapter.PredictHistoryViewHolder>() {
@@ -42,17 +46,35 @@ class CollectionAdapter(private val predictHistoryList: List<PredictHistoryItem>
 
         Log.d("CollectionAdapter", "Binding item at position $position: $item")
 
+        // Set Predicted Class and Waste Type
         holder.tvPredictedClass.text = "Predicted Class: ${item.predictedClass}"
         holder.tvWasteType.text = "Waste Type: ${item.wasteType}"
-        holder.tvTimestamp.text = "Timestamp: ${item.timestamp}"
+
+        // Call it now from your adapter
+        val formattedTimestamp = item.timestamp.toFormattedDateTime()
+        holder.tvTimestamp.text = formattedTimestamp
 
         Log.d("CollectionAdapter", "Loading image: ${item.imageUrl}")
 
+        // Load image using Glide
         Glide.with(holder.itemView.context).load(item.imageUrl).into(holder.imageView)
     }
 
     override fun getItemCount(): Int {
         Log.d("CollectionAdapter", "Item count: ${predictHistoryList.size}")
         return predictHistoryList.size
+    }
+
+    internal fun String.toFormattedDateTime(): String {
+        return try {
+            val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
+            parser.timeZone = TimeZone.getTimeZone("UTC")
+            val date = parser.parse(this)
+            val formatter = SimpleDateFormat("dd MMM yyyy HH:mm", Locale.getDefault())
+            formatter.format(date!!)
+        } catch (e: Exception) {
+            Log.e("CollectionAdapter", "Invalid timestamp format", e)
+            "Invalid Date"
+        }
     }
 }
