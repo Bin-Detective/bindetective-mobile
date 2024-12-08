@@ -23,8 +23,8 @@ data class PredictHistoryItem(
 
 // Timestamp object to map the nested JSON structure
 data class Timestamp(
-    @SerializedName("seconds") val seconds: Long,
-    @SerializedName("nanoseconds") val nanoseconds: Int
+    @SerializedName("_seconds") val seconds: Long,
+    @SerializedName("_nanoseconds") val nanoseconds: Int
 ) : Serializable {
     fun toFormattedDateTime(): String {
         val date = Date(seconds * 1000)
