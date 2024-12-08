@@ -15,11 +15,14 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
-class CollectionAdapter(private val predictHistoryList: List<PredictHistoryItem>) :
+class CollectionAdapter(predictHistoryList: List<PredictHistoryItem>) :
     RecyclerView.Adapter<CollectionAdapter.PredictHistoryViewHolder>() {
 
+    private val sortedPredictHistoryList: List<PredictHistoryItem> = predictHistoryList
+        .sortedByDescending { it.timestamp.seconds }  // Sort by timestamp in descending order
+
     init {
-        Log.d("CollectionAdapter", "Adapter initialized with ${predictHistoryList.size} items")
+        Log.d("CollectionAdapter", "Adapter initialized with ${sortedPredictHistoryList.size} items")
     }
 
     inner class PredictHistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -37,7 +40,7 @@ class CollectionAdapter(private val predictHistoryList: List<PredictHistoryItem>
     }
 
     override fun onBindViewHolder(holder: PredictHistoryViewHolder, position: Int) {
-        val item = predictHistoryList.getOrNull(position)
+        val item = sortedPredictHistoryList.getOrNull(position)
 
         if (item == null) {
             Log.e("CollectionAdapter", "Item at position $position is null")
@@ -61,20 +64,7 @@ class CollectionAdapter(private val predictHistoryList: List<PredictHistoryItem>
     }
 
     override fun getItemCount(): Int {
-        Log.d("CollectionAdapter", "Item count: ${predictHistoryList.size}")
-        return predictHistoryList.size
-    }
-
-    internal fun String.toFormattedDateTime(): String {
-        return try {
-            val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
-            parser.timeZone = TimeZone.getTimeZone("UTC")
-            val date = parser.parse(this)
-            val formatter = SimpleDateFormat("dd MMM yyyy HH:mm", Locale.getDefault())
-            formatter.format(date!!)
-        } catch (e: Exception) {
-            Log.e("CollectionAdapter", "Invalid timestamp format", e)
-            "Invalid Date"
-        }
+        Log.d("CollectionAdapter", "Item count: ${sortedPredictHistoryList.size}")
+        return sortedPredictHistoryList.size
     }
 }
