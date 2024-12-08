@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.capstone.bindetective.api.ApiConfig
 import com.capstone.bindetective.model.PredictHistoryItem
+import com.capstone.bindetective.model.PredictHistoryResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -13,33 +14,32 @@ import retrofit2.Response
 class CollectionViewModel : ViewModel() {
 
     private val _predictHistory = MutableLiveData<List<PredictHistoryItem>?>()
-    val predictHistory: MutableLiveData<List<PredictHistoryItem>?> get() = _predictHistory
+    val predictHistory: LiveData<List<PredictHistoryItem>?> get() = _predictHistory
 
-    // Function to get prediction history for a user by userId
     fun getPredictHistory(userId: String) {
-        Log.d("CollectionViewModel", "Initiating API call to get PredictHistory for userId: $userId")
+        ApiConfig.getApiService().getPredictHistory(userId).enqueue(object : Callback<PredictHistoryResponse> {
 
-        ApiConfig.getApiService().getPredictHistory(userId).enqueue(object : Callback<List<PredictHistoryItem>> {
-            override fun onResponse(call: Call<List<PredictHistoryItem>>, response: Response<List<PredictHistoryItem>>) {
+            override fun onResponse(call: Call<PredictHistoryResponse>, response: Response<PredictHistoryResponse>) {
                 if (response.isSuccessful) {
-                    val predictHistoryList = response.body()
+                    val predictHistoryResponse = response.body()
 
-                    Log.d("CollectionViewModel", "API call successful. Received PredictHistoryList: $predictHistoryList")
-
-                    if (predictHistoryList.isNullOrEmpty()) {
-                        Log.e("CollectionViewModel", "API response contains an empty PredictHistoryList")
-                    } else {
-                        Log.d("CollectionViewModel", "Received ${predictHistoryList.size} items from API response")
+                    // Filter the response to include only a specific user ID
+                    val filteredHistory = predictHistoryResponse?.predictHistory?.filter {
+                        it.userId == "u7pzdJ3XGsNrtoQqx5ujUXqYOoJ3"
                     }
 
-                    _predictHistory.postValue(predictHistoryList)
+                    filteredHistory?.forEach {
+                        Log.d("History", "Timestamp: ${it.timestamp.toFormattedDateTime()}")
+                    }
+
+                    _predictHistory.postValue(filteredHistory)
                 } else {
-                    Log.e("CollectionViewModel", "API call failed with response code: ${response.code()}")
+                    Log.e("API ERROR", "Response code: ${response.code()}")
                 }
             }
 
-            override fun onFailure(call: Call<List<PredictHistoryItem>>, t: Throwable) {
-                Log.e("CollectionViewModel", "API call failed with error: ${t.message}")
+            override fun onFailure(call: Call<PredictHistoryResponse>, t: Throwable) {
+                Log.e("API FAILURE", t.message ?: "Unknown error")
             }
         })
     }
