@@ -12,10 +12,11 @@
         android:id="@+id/tvQuizResultTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Quiz Submitted!"
+        android:text="Quiz Result"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp"
+        android:textColor="@android:color/black" />
 
     <!-- Result Message -->
     <TextView
@@ -24,6 +25,6 @@
         android:layout_height="wrap_content"
         android:text="Result Message"
         android:textSize="18sp"
-        android:layout_marginBottom="24dp" />
-
+        android:layout_marginBottom="24dp"
+        android:textColor="@android:color/black" />
 </LinearLayout>

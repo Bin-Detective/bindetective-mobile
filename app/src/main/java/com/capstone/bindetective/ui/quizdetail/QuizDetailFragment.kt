@@ -12,8 +12,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.capstone.bindetective.R
+import com.capstone.bindetective.model.Answer
 import com.capstone.bindetective.model.SubmitQuizRequest
+import com.capstone.bindetective.model.SubmitQuizResponse
 import com.capstone.bindetective.ui.quizresult.QuizResultFragment
+import com.capstone.bindetective.ui.quizresult.QuizResultViewModel
 
 class QuizDetailFragment : Fragment() {
 
@@ -24,44 +27,38 @@ class QuizDetailFragment : Fragment() {
 
     private val selectedAnswers = mutableMapOf<Int, String>()
     private lateinit var quizDetailViewModel: QuizDetailViewModel
+    private lateinit var quizResultViewModel: QuizResultViewModel
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        Log.d("QuizDetailFragment", "onCreateView called")
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_quiz_detail, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.d("QuizDetailFragment", "onViewCreated called")
-
-        // Initialize UI elements
         tvTitle = view.findViewById(R.id.tvQuizTitle)
         tvDescription = view.findViewById(R.id.tvQuizDescription)
         recyclerViewQuestions = view.findViewById(R.id.recyclerViewQuiz)
         btnSubmit = view.findViewById(R.id.btnSubmit)
 
-        // Setup ViewModel
         quizDetailViewModel = ViewModelProvider(this).get(QuizDetailViewModel::class.java)
-        Log.d("QuizDetailFragment", "ViewModel initialized")
+        quizResultViewModel = ViewModelProvider(this).get(QuizResultViewModel::class.java)
 
-        // Get the Quiz ID from arguments
         val quizId = arguments?.getString("quizId")
+        Log.d("QuizDetailFragment", "Quiz ID: $quizId")
+
         if (quizId == null) {
             Log.e("QuizDetailFragment", "No quizId found in arguments")
             return
         }
-        Log.d("QuizDetailFragment", "Quiz ID: $quizId")
 
-        // Fetch quiz details
         quizDetailViewModel.getQuizDetail(quizId)
         quizDetailViewModel.quizDetail.observe(viewLifecycleOwner) { quizDetail ->
-            Log.d("QuizDetailFragment", "Quiz detail received")
-
             if (quizDetail != null) {
-                Log.d("QuizDetailFragment", "Title: ${quizDetail.title}")
-                Log.d("QuizDetailFragment", "Description: ${quizDetail.description}")
-
                 tvTitle.text = quizDetail.title
                 tvDescription.text = quizDetail.description
 
@@ -69,60 +66,61 @@ class QuizDetailFragment : Fragment() {
                 recyclerViewQuestions.adapter = QuizDetailAdapter(
                     quizDetail.questions
                 ) { position, selectedOptionId ->
-                    Log.d("QuizDetailFragment", "Question $position selected answer $selectedOptionId")
                     selectedAnswers[position] = selectedOptionId
+                    Log.d("QuizDetailFragment", "Selected answer for position $position: $selectedOptionId")
                 }
             }
         }
 
         btnSubmit.setOnClickListener {
-            Log.d("QuizDetailFragment", "Submit button clicked")
-
             if (selectedAnswers.size == recyclerViewQuestions.adapter?.itemCount) {
-                Log.d("QuizDetailFragment", "All questions answered")
                 submitAnswers(quizId, selectedAnswers)
             } else {
                 Log.e("QuizDetailFragment", "Please answer all questions")
             }
         }
-    }
 
-    private fun submitAnswers(quizId: String, answers: Map<Int, String>) {
-        Log.d("QuizDetailFragment", "Submitting quiz answers")
-
-        val userId = "u7pzdJ3XGsNrtoQqx5ujUXqYOoJ3"
-
-        val request = SubmitQuizRequest(
-            userId = userId,
-            answers = answers.map {
-                SubmitQuizRequest.Answer(it.key.toString(), it.value)
-            }
-        )
-
-        quizDetailViewModel.submitQuizAnswers(quizId, request) { response ->
-            Log.d("QuizDetailFragment", "API response received")
-            Log.d("QuizDetailFragment", "Response success: ${response.success}")
-            Log.d("QuizDetailFragment", "Response message: ${response.message}")
-            Log.d("QuizDetailFragment", "Score received: ${response.score}")
-
-            val bundle = Bundle().apply {
-                putBoolean("success", response.success)
-                putString("message", response.message)
-                response.score?.let { putInt("score", it) }
-            }
-
-            try {
-                Log.d("QuizDetailFragment", "Navigating to QuizResultFragment")
-
-                val resultFragment = QuizResultFragment().apply { arguments = bundle }
-
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, resultFragment)
-                    .commitAllowingStateLoss()
-            } catch (e: Exception) {
-                Log.e("QuizDetailFragment", "Navigation error: ${e.message}")
-            }
+        quizResultViewModel.submitQuizResult.observe(viewLifecycleOwner) { response ->
+            navigateToResultFragment(response)
         }
     }
 
+    private fun submitAnswers(quizId: String, answers: Map<Int, String>) {
+        val userId = "u7pzdJ3XGsNrtoQqx5ujUXqYOoJ3"
+
+        // Map answers using actual question IDs from quizDetail
+        val formattedAnswers = quizDetailViewModel.quizDetail.value?.questions?.mapIndexed { index, question ->
+            val selectedOptionId = answers[index]
+            if (selectedOptionId != null) {
+                Answer(
+                    questionId = question.questionId,  // Use the actual questionId
+                    selectedOptionId = selectedOptionId
+                )
+            } else {
+                null
+            }
+        }?.filterNotNull() ?: emptyList()
+
+        // Create the SubmitQuizRequest object
+        val request = SubmitQuizRequest(
+            userId = userId,
+            answers = formattedAnswers
+        )
+
+        Log.d("QuizDetailFragment", "Request: $request")
+        quizResultViewModel.submitQuizAnswers(quizId, request)
+    }
+
+
+    private fun navigateToResultFragment(response: SubmitQuizResponse?) {
+        val bundle = Bundle().apply {
+            putString("message", response?.message)
+            response?.score?.let { putInt("score", it) }
+        }
+
+        val resultFragment = QuizResultFragment().apply { arguments = bundle }
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, resultFragment)
+            .commitAllowingStateLoss()
+    }
 }
