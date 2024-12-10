@@ -5,24 +5,23 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="?attr/selectableItemBackground"
-    >
+    android:background="#FCF596">
 
+    <!-- Quiz Title -->
     <TextView
         android:id="@+id/quizTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:textColor="@android:color/black"
-        />
+        android:textColor="@android:color/black" />
 
+    <!-- Quiz Description -->
     <TextView
         android:id="@+id/quizDesc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="14sp"
-        android:textColor="@android:color/darker_gray"
-        />
+        android:textColor="@android:color/darker_gray" />
 
 </LinearLayout>

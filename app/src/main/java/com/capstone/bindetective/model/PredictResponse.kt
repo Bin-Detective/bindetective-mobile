@@ -7,6 +7,6 @@ data class PredictResponse(
     @SerializedName("imageUrl") val imageUrl: String,
     @SerializedName("predicted_class") val predictedClass: String?,
     @SerializedName("waste_type") val wasteType: String?,
-    @SerializedName("probabilities") val probabilities: Map<String, Float>
+    @SerializedName("probabilities") val probabilities: Map<String, Double>
 ) : Serializable
 

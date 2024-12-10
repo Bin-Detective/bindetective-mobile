@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.capstone.bindetective.R
 import com.capstone.bindetective.databinding.FragmentHomeBinding
 import com.capstone.bindetective.model.ArticleResponseItem
+import com.capstone.bindetective.ui.articledetail.ArticleDetailFragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
@@ -31,35 +32,43 @@ class HomeFragment : Fragment() {
     ): View? {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        // Set up RecyclerView for articles
-        articleAdapter = ArticleAdapter(listOf())
+        // Initialize RecyclerView and Adapter
+        articleAdapter = ArticleAdapter(listOf()) { article ->
+            navigateToArticleDetail(article)
+        }
         binding.recyclerViewArticles.layoutManager = LinearLayoutManager(activity)
         binding.recyclerViewArticles.adapter = articleAdapter
 
-        // Set user info
         setUserInfo()
-
-        // Observe LiveData for articles
         observeViewModel()
-
-        // Fetch articles
         homeViewModel.fetchArticles()
 
         return binding.root
     }
 
     private fun observeViewModel() {
-        homeViewModel.articles.observe(viewLifecycleOwner, Observer { articles ->
+        homeViewModel.articles.observe(viewLifecycleOwner) { articles ->
             if (articles != null) {
-                Log.d("HomeFragment", "Articles received: ${articles.size}")
                 articleAdapter.updateData(articles)
             }
-        })
+        }
 
-        homeViewModel.error.observe(viewLifecycleOwner, Observer { errorMsg ->
+        homeViewModel.error.observe(viewLifecycleOwner) { errorMsg ->
             Toast.makeText(requireContext(), errorMsg, Toast.LENGTH_SHORT).show()
-            Log.e("HomeFragment", "API Error: $errorMsg")
-        })
+        }
+    }
+
+    private fun navigateToArticleDetail(article: ArticleResponseItem) {
+        val bundle = Bundle().apply {
+            putParcelable("article", article)
+        }
+        val fragment = ArticleDetailFragment().apply {
+            arguments = bundle
+        }
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun setUserInfo() {
