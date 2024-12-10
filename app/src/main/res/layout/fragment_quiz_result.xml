@@ -2,26 +2,43 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
+    android:background="@drawable/background"
     android:padding="16dp">
 
-    <!-- Quiz Result Title -->
-    <TextView
-        android:id="@+id/tvQuizResultTitle"
+    <!-- Box to wrap the title and result -->
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Quiz Title"
-        android:textColor="@android:color/black"
-        android:textSize="24sp" />
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="#FCF596"
+        android:padding="50dp"
+        android:layout_margin="16dp">
 
-    <!-- Quiz Result Message -->
-    <TextView
-        android:id="@+id/tvResultMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Quiz Message"
-        android:textColor="@android:color/black"
-        android:textSize="18sp" />
+        <!-- Quiz Result Title -->
+        <TextView
+            android:id="@+id/tvQuizResultTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Quiz Title"
+            android:textColor="@android:color/black"
+            android:textSize="24sp"
+            android:gravity="center"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Quiz Result Message -->
+        <TextView
+            android:id="@+id/tvResultMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Quiz Message"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:gravity="center" />
+
+    </LinearLayout>
+
 </LinearLayout>
