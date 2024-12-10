@@ -44,13 +44,10 @@ class SignInActivity : AppCompatActivity() {
         auth = Firebase.auth
 
         // Initialize UI elements
-        userInfoTextView = findViewById(R.id.tv_user_info)
         signInButton = findViewById(R.id.btn_google_sign_in)
-        signOutButton = findViewById(R.id.btn_google_sign_out)
 
         // Set up listeners
         signInButton.setOnClickListener { signIn() }
-        signOutButton.setOnClickListener { signOut() }
     }
 
     override fun onStart() {
@@ -95,16 +92,6 @@ class SignInActivity : AppCompatActivity() {
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
 
-    private fun signOut() {
-        // Sign out from Firebase and Google
-        auth.signOut()
-        googleSignInClient.signOut().addOnCompleteListener(this) {
-            Log.d(TAG, "User signed out.")
-            Toast.makeText(this, "Signed out successfully", Toast.LENGTH_SHORT).show()
-            updateUI(null)
-        }
-    }
-
     private fun updateUI(user: FirebaseUser?) {
         if (user != null) {
             val intent = Intent(this, BottomMainActivity::class.java)
@@ -113,9 +100,7 @@ class SignInActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         } else {
-            userInfoTextView.text = "User info will appear here"
             signInButton.visibility = Button.VISIBLE
-            signOutButton.visibility = Button.GONE
         }
     }
 

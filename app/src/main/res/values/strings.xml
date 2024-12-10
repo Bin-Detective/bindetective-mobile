@@ -20,12 +20,12 @@
     <string name="image_upload_failed">Image upload failed</string>
     <string name="image_upload_successful">Image upload successful</string>
 
-        <!-- Back Button Description -->
+    <!-- Back Button Description -->
     <string name="back_button">Back</string>
 
-        <!-- Back Button Text -->
+    <!-- Back Button Text -->
     <string name="back">Back</string>
-        <!-- Article Image Description -->
+    <!-- Article Image Description -->
     <string name="article_image">Article Image</string>
 
 

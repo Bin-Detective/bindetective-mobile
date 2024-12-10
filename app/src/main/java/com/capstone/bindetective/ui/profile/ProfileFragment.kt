@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.capstone.bindetective.R
 import com.capstone.bindetective.databinding.FragmentProfileBinding
-import com.capstone.bindetective.ui.signin.SignInActivity
+import com.capstone.bindetective.ui.WelcomeActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
 
@@ -68,7 +68,7 @@ class ProfileFragment : Fragment() {
         Toast.makeText(requireContext(), "Signed out successfully", Toast.LENGTH_SHORT).show()
 
         // Navigate to Sign-In screen
-        val intent = Intent(requireContext(), SignInActivity::class.java)
+        val intent = Intent(requireContext(), WelcomeActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
     }
