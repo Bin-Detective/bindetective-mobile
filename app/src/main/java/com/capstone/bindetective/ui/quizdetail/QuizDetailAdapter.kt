@@ -16,8 +16,8 @@ class QuizDetailAdapter(
 ) : RecyclerView.Adapter<QuizDetailAdapter.QuizViewHolder>() {
 
     inner class QuizViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvQuestion: TextView = itemView.findViewById(R.id.tvQuestion)
-        val radioGroupAnswers: RadioGroup = itemView.findViewById(R.id.radioGroupAnswers)
+        private val tvQuestion: TextView = itemView.findViewById(R.id.tvQuestion)
+        private val radioGroupAnswers: RadioGroup = itemView.findViewById(R.id.radioGroupAnswers)
 
         fun bind(question: QuizDetailResponse.Question, position: Int) {
             tvQuestion.text = question.text

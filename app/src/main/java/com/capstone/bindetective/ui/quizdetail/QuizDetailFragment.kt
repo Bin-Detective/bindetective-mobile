@@ -15,8 +15,8 @@ import com.capstone.bindetective.R
 import com.capstone.bindetective.model.Answer
 import com.capstone.bindetective.model.SubmitQuizRequest
 import com.capstone.bindetective.model.SubmitQuizResponse
-import com.capstone.bindetective.ui.quizresult.QuizResultFragment
 import com.capstone.bindetective.ui.quizresult.QuizResultViewModel
+import com.capstone.bindetective.ui.quizresult.QuizResultFragment
 
 class QuizDetailFragment : Fragment() {
 
@@ -45,8 +45,8 @@ class QuizDetailFragment : Fragment() {
         recyclerViewQuestions = view.findViewById(R.id.recyclerViewQuiz)
         btnSubmit = view.findViewById(R.id.btnSubmit)
 
-        quizDetailViewModel = ViewModelProvider(this).get(QuizDetailViewModel::class.java)
-        quizResultViewModel = ViewModelProvider(this).get(QuizResultViewModel::class.java)
+        quizDetailViewModel = ViewModelProvider(this)[QuizDetailViewModel::class.java]
+        quizResultViewModel = ViewModelProvider(this)[QuizResultViewModel::class.java]
 
         val quizId = arguments?.getString("quizId")
         Log.d("QuizDetailFragment", "Quiz ID: $quizId")
@@ -57,6 +57,7 @@ class QuizDetailFragment : Fragment() {
         }
 
         quizDetailViewModel.getQuizDetail(quizId)
+
         quizDetailViewModel.quizDetail.observe(viewLifecycleOwner) { quizDetail ->
             if (quizDetail != null) {
                 tvTitle.text = quizDetail.title
@@ -88,12 +89,11 @@ class QuizDetailFragment : Fragment() {
     private fun submitAnswers(quizId: String, answers: Map<Int, String>) {
         val userId = "u7pzdJ3XGsNrtoQqx5ujUXqYOoJ3"
 
-        // Map answers using actual question IDs from quizDetail
         val formattedAnswers = quizDetailViewModel.quizDetail.value?.questions?.mapIndexed { index, question ->
             val selectedOptionId = answers[index]
             if (selectedOptionId != null) {
                 Answer(
-                    questionId = question.questionId,  // Use the actual questionId
+                    questionId = question.questionId,
                     selectedOptionId = selectedOptionId
                 )
             } else {
@@ -101,26 +101,25 @@ class QuizDetailFragment : Fragment() {
             }
         }?.filterNotNull() ?: emptyList()
 
-        // Create the SubmitQuizRequest object
-        val request = SubmitQuizRequest(
-            userId = userId,
-            answers = formattedAnswers
-        )
+        val request = SubmitQuizRequest(userId = userId, answers = formattedAnswers)
 
         Log.d("QuizDetailFragment", "Request: $request")
         quizResultViewModel.submitQuizAnswers(quizId, request)
     }
 
-
     private fun navigateToResultFragment(response: SubmitQuizResponse?) {
         val bundle = Bundle().apply {
-            putString("message", response?.message)
+            putString("message", response?.message ?: "No message")
             response?.score?.let { putInt("score", it) }
         }
 
         val resultFragment = QuizResultFragment().apply { arguments = bundle }
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, resultFragment)
+            .addToBackStack(null)   // Ensures proper back navigation stack
             .commitAllowingStateLoss()
+
+        Log.d("QuizDetailFragment", "Navigating to QuizResultFragment")
     }
+
 }

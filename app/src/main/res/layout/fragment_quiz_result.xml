@@ -2,29 +2,26 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center"
     android:padding="16dp">
 
-    <!-- Confirmation Title -->
+    <!-- Quiz Result Title -->
     <TextView
         android:id="@+id/tvQuizResultTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Quiz Result"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="16dp"
-        android:textColor="@android:color/black" />
+        android:text="Quiz Title"
+        android:textColor="@android:color/black"
+        android:textSize="24sp" />
 
-    <!-- Result Message -->
+    <!-- Quiz Result Message -->
     <TextView
         android:id="@+id/tvResultMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Result Message"
-        android:textSize="18sp"
-        android:layout_marginBottom="24dp"
-        android:textColor="@android:color/black" />
+        android:text="Quiz Message"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" />
 </LinearLayout>
