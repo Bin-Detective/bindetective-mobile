@@ -16,7 +16,7 @@ data class PredictHistoryItem(
     @SerializedName("imageUrl") val imageUrl: String,
     @SerializedName("predicted_class") val predictedClass: String?,
     @SerializedName("waste_type") val wasteType: String?,
-    @SerializedName("probabilities") val probabilities: Map<String, Float>,
+    @SerializedName("probabilities") val probabilities: Map<String, Double>,
     @SerializedName("timestamp") val timestamp: Timestamp, // Use nested object
     @SerializedName("userId") val userId: String
 ) : Serializable

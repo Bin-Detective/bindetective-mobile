@@ -15,15 +15,11 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
-class CollectionAdapter(predictHistoryList: List<PredictHistoryItem>) :
+class CollectionAdapter(private val predictHistoryList: List<PredictHistoryItem>) :
     RecyclerView.Adapter<CollectionAdapter.PredictHistoryViewHolder>() {
 
     private val sortedPredictHistoryList: List<PredictHistoryItem> = predictHistoryList
         .sortedByDescending { it.timestamp.seconds }  // Sort by timestamp in descending order
-
-    init {
-        Log.d("CollectionAdapter", "Adapter initialized with ${sortedPredictHistoryList.size} items")
-    }
 
     inner class PredictHistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.imageView)
@@ -33,7 +29,6 @@ class CollectionAdapter(predictHistoryList: List<PredictHistoryItem>) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PredictHistoryViewHolder {
-        Log.d("CollectionAdapter", "Creating ViewHolder for position $viewType")
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.row_collection, parent, false)
         return PredictHistoryViewHolder(view)
@@ -49,11 +44,14 @@ class CollectionAdapter(predictHistoryList: List<PredictHistoryItem>) :
 
         Log.d("CollectionAdapter", "Binding item at position $position: $item")
 
-        // Set Predicted Class and Waste Type
-        holder.tvPredictedClass.text = "Predicted Class: ${item.predictedClass}"
+        // Calculate percentage probability
+        val predictedClass = item.predictedClass
+        val predictedClassProbability = (item.probabilities[predictedClass] ?: 0.0) * 100.0
+
+        // Set Predicted Class with Percentage
+        holder.tvPredictedClass.text = "Predicted Class: $predictedClass ${predictedClassProbability.toInt()}%"
         holder.tvWasteType.text = "Waste Type: ${item.wasteType}"
 
-        // Call it now from your adapter
         val formattedTimestamp = item.timestamp.toFormattedDateTime()
         holder.tvTimestamp.text = formattedTimestamp
 

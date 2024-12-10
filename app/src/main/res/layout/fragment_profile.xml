@@ -6,18 +6,33 @@
     android:layout_height="match_parent"
     tools:context=".ui.profile.ProfileFragment">
 
+    <!-- Profile Title -->
+    <TextView
+        android:id="@+id/textViewProfileTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Profile"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:paddingBottom="8dp" />
+
     <!-- Profile Picture Section -->
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imageViewProfilePicture"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:src="@drawable/ic_profile_placeholder"
         android:background="@drawable/circle_background"
         android:scaleType="centerCrop"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewProfileTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -64,14 +79,17 @@
     <!-- Sign Out Button -->
     <Button
         android:id="@+id/buttonSignOut"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Sign Out"
         app:layout_constraintTop_toBottomOf="@id/textViewPoints"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginTop="32dp"
-        android:textColor="@android:color/white"
-        android:backgroundTint="?attr/colorPrimary" />
+        android:textColor="@android:color/black"
+        android:backgroundTint="#FCF596" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

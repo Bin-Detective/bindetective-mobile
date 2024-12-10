@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -6,45 +7,77 @@
     android:layout_height="match_parent"
     tools:context=".ui.camera.CameraFragment">
 
+    <!-- Camera Title -->
+    <TextView
+        android:id="@+id/textViewCameraTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Camera"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:paddingBottom="8dp" />
+
+    <!-- Camera Preview ImageView -->
     <ImageView
         android:id="@+id/ivPreview"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        android:src="@drawable/ic_profile_placeholder"
+        android:src="@drawable/ic_image"
         app:layout_constraintBottom_toTopOf="@+id/btnCamera"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/textViewCameraTitle" />
 
+    <!-- Take Picture Button -->
     <Button
         android:id="@+id/btnCamera"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Take Picture"
+        android:backgroundTint="#FCF596"
+        android:textColor="@android:color/black"
         app:layout_constraintBottom_toTopOf="@+id/btnGallery"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
+    <!-- Select from Gallery Button -->
     <Button
         android:id="@+id/btnGallery"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Select from Gallery"
+        android:backgroundTint="#FCF596"
         app:layout_constraintBottom_toTopOf="@+id/btnUpload"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
+    <!-- Upload Button -->
     <Button
         android:id="@+id/btnUpload"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Upload"
+        android:backgroundTint="#FCF596"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp" />
 
+    <!-- Progress Bar -->
     <ProgressBar
         android:id="@+id/progressbar"
         android:layout_width="wrap_content"
