@@ -17,7 +17,6 @@ class QuizAdapter(
     inner class QuizViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.quizTitle)
         val descriptionTextView: TextView = itemView.findViewById(R.id.quizDesc)
-        val scoreTextView: TextView = itemView.findViewById(R.id.quizScore)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuizViewHolder {
@@ -31,17 +30,12 @@ class QuizAdapter(
         holder.titleTextView.text = quizItem.title
         holder.descriptionTextView.text = quizItem.description
 
-        if (position == 0 && score != null) {
-            holder.scoreTextView.text = "Your Score: $score"
-            holder.scoreTextView.visibility = View.VISIBLE
-        } else {
-            holder.scoreTextView.visibility = View.GONE
-        }
-
         holder.itemView.setOnClickListener {
             onQuizClick(quizItem)
         }
     }
 
     override fun getItemCount(): Int = quizzes.size
+
+
 }

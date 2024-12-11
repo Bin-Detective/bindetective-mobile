@@ -2,7 +2,6 @@ package com.capstone.bindetective.ui.quiz
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.capstone.bindetective.api.ApiConfig
 import com.capstone.bindetective.model.QuizResponseItem
 import retrofit2.Call
@@ -24,20 +23,17 @@ class QuizViewModel(application: Application) : AndroidViewModel(application) {
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
 
-    private val userId = "u7pzdJ3XGsNrtoQqx5ujUXqYOoJ3"  // Replace with actual user ID
+    private val userId = "u7pzdJ3XGsNrtoQqx5ujUXqYOoJ3"
 
-    // Save the score in SharedPreferences
-    fun saveScore(score: Int?) {
-        score?.let {
-            sharedPreferences.edit().putInt("SAVED_SCORE_$userId", it).apply()
-            _score.postValue(it)
-        }
+    // Save the quiz score to SharedPreferences
+    fun saveScore(score: Int) {
+        sharedPreferences.edit().putInt("SAVED_SCORE_$userId", score).apply()
     }
 
     // Retrieve the score from SharedPreferences
     fun getScore(): Int = sharedPreferences.getInt("SAVED_SCORE_$userId", 0)
 
-    // Fetch all quizzes from the API
+    // Fetch quizzes from the API
     fun fetchQuizzes() {
         ApiConfig.getApiService().getAllQuizzes().enqueue(object : Callback<List<QuizResponseItem>> {
             override fun onResponse(call: Call<List<QuizResponseItem>>, response: Response<List<QuizResponseItem>>) {
