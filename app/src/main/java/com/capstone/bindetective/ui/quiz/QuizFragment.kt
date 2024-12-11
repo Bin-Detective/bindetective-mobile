@@ -33,21 +33,24 @@ class QuizFragment : Fragment() {
         Log.d("QuizFragment", "onViewCreated called")
 
         recyclerView = view.findViewById(R.id.recyclerView)
-        Log.d("QuizFragment", "RecyclerView initialized")
 
         quizViewModel = ViewModelProvider(this).get(QuizViewModel::class.java)
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        // Retrieve the score passed from QuizResultFragment
+        val score = arguments?.getInt("score")
 
         quizViewModel.quizzes.observe(viewLifecycleOwner) { quizzes ->
             Log.d("QuizFragment", "Received quizzes: $quizzes")
 
             if (quizzes != null && quizzes.isNotEmpty()) {
                 Log.d("QuizFragment", "Setting adapter with quiz items")
-                recyclerView.adapter = QuizAdapter(quizzes) { quiz ->
+
+                // Pass quizzes and score to the adapter
+                recyclerView.adapter = QuizAdapter(quizzes, score) { quiz ->
                     Log.d("QuizFragment", "Quiz item clicked: ${quiz.quizId}")
 
-                    // Manually navigate to QuizDetailFragment without NavController
                     val fragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
                     val quizDetailFragment = QuizDetailFragment()
 

@@ -8,12 +8,14 @@ import com.capstone.bindetective.model.QuizResponseItem
 
 class QuizAdapter(
     private val quizzes: List<QuizResponseItem>,
+    private val score: Int?,  // This is the overall quiz score
     private val onQuizClick: (QuizResponseItem) -> Unit
 ) : RecyclerView.Adapter<QuizAdapter.QuizViewHolder>() {
 
     inner class QuizViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.quizTitle)
         val descriptionTextView: TextView = itemView.findViewById(R.id.quizDesc)
+        val scoreTextView: TextView = itemView.findViewById(R.id.quizScore)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuizViewHolder {
@@ -22,14 +24,24 @@ class QuizAdapter(
     }
 
     override fun onBindViewHolder(holder: QuizViewHolder, position: Int) {
-        val quiz = quizzes[position]
-        holder.titleTextView.text = quiz.title
-        holder.descriptionTextView.text = quiz.description
+        val quizItem = quizzes[position]
+
+        // Bind quiz title and description
+        holder.titleTextView.text = quizItem.title
+        holder.descriptionTextView.text = quizItem.description
+
+        // **Show the overall quiz score once per row item**
+        if (position == 0 && score != null) {
+            holder.scoreTextView.text = "Your Score: $score"
+            holder.scoreTextView.visibility = View.VISIBLE
+        } else {
+            holder.scoreTextView.visibility = View.GONE
+        }
 
         holder.itemView.setOnClickListener {
-            onQuizClick(quiz)
+            onQuizClick(quizItem)
         }
     }
 
-    override fun getItemCount() = quizzes.size
+    override fun getItemCount(): Int = quizzes.size
 }

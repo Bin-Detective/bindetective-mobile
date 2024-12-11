@@ -37,8 +37,17 @@
             android:text="Quiz Message"
             android:textColor="@android:color/black"
             android:textSize="18sp"
-            android:gravity="center" />
+            android:gravity="center"
+            android:layout_marginBottom="16dp" />
 
+        <!-- Back Button -->
+        <Button
+            android:id="@+id/btnBackToQuiz"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back to Quiz"
+            android:backgroundTint="#FFC107"
+            android:textColor="@android:color/black" />
     </LinearLayout>
 
 </LinearLayout>
