@@ -30,10 +30,21 @@ class QuizResultFragment : Fragment() {
 
         // Back button listener to navigate to QuizFragment
         binding.btnBackToQuiz.setOnClickListener {
-            val quizFragment = QuizFragment()
+            val score = arguments?.getInt("score")
+
+            // Create a new instance of QuizFragment and pass the score back in a Bundle
+            val quizFragment = QuizFragment().apply {
+                arguments = Bundle().apply {
+                    putInt("score", score ?: 0)
+                }
+            }
+
             requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, quizFragment) // Replace with QuizFragment
+                .replace(R.id.fragment_container, quizFragment)  // Replace with QuizFragment
+                .addToBackStack(null)  // Keep it in the back stack
                 .commit()
+
+            Log.d("QuizResultFragment", "Navigating back to QuizFragment with score: $score")
         }
 
         // Retrieve the bundle arguments passed during fragment creation
@@ -46,6 +57,7 @@ class QuizResultFragment : Fragment() {
         Log.d("QuizResultFragment", "Quiz Result Title: ${binding.tvQuizResultTitle.text}")
         Log.d("QuizResultFragment", "Quiz Result Message: ${binding.tvResultMessage.text}")
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
