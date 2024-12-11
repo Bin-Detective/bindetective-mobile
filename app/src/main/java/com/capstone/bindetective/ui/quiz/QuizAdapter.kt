@@ -1,3 +1,5 @@
+package com.capstone.bindetective.ui.quiz
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +10,7 @@ import com.capstone.bindetective.model.QuizResponseItem
 
 class QuizAdapter(
     private val quizzes: List<QuizResponseItem>,
-    private val score: Int?,  // This is the overall quiz score
+    private val score: Int?,
     private val onQuizClick: (QuizResponseItem) -> Unit
 ) : RecyclerView.Adapter<QuizAdapter.QuizViewHolder>() {
 
@@ -26,11 +28,9 @@ class QuizAdapter(
     override fun onBindViewHolder(holder: QuizViewHolder, position: Int) {
         val quizItem = quizzes[position]
 
-        // Bind quiz title and description
         holder.titleTextView.text = quizItem.title
         holder.descriptionTextView.text = quizItem.description
 
-        // **Show the overall quiz score once per row item**
         if (position == 0 && score != null) {
             holder.scoreTextView.text = "Your Score: $score"
             holder.scoreTextView.visibility = View.VISIBLE
