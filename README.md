@@ -52,15 +52,18 @@ Key dependencies used:
 
 ### 1. **User Management**
 - `POST /users`: Create a new user.
-- `GET /users/{userId}`: Retrieve user details.
-- `PUT /users/{userId}`: Update user details.
-- `DELETE /users/{userId}`: Delete a user.
 
-### 2. **Quiz**
-- `GET /quiz`: Retrieve quiz questions.
+### 2. **Articles**
+- `GET /articles`: Retrieve all articles.
 
 ### 3. **Image Prediction**
 - `POST /predict`: Upload an image for prediction.
+- `GET /predict/collections`: Retrieve prediction history based on user ID.
+
+### 4. **Quiz**
+- `GET /quizzes`: Retrieve all quizzes.
+- `GET /quizzes/{quizId}`: Retrieve quiz details by ID.
+- `POST /quizzes/{quizId}/submit`: Submit answers for a specific quiz.
 
 ---
 
@@ -68,16 +71,6 @@ Key dependencies used:
 
 ### **Directories**
 - **api**: API-related classes (`ApiService`, `ApiConfig`).
-- **model**: Data models (`User`, `CreateUserResponse`, `QuizDetailResponse`).
+- **model**: Data models (`User`, `CreateUserResponse`, `QuizDetailResponse`, `PredictResponse`, `ArticleResponseItem`, etc.).
 - **ui**: UI components like activities and fragments.
-- **viewmodel**: ViewModel classes for managing UI-related data.
-
----
-
-## **Future Enhancements**
-
-1. Add dark mode support.
-2. Implement push notifications using Firebase Cloud Messaging.
-3. Optimize image uploads with compression.
-4. Add localization for multiple languages.
-5. Enhance security with authentication tokens.
+- **viewmodel**: ViewModel classes for managing UI-related
