@@ -5,37 +5,50 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.capstone.bindetective.R
+import com.capstone.bindetective.databinding.FragmentQuizResultBinding
+import com.capstone.bindetective.ui.quiz.QuizFragment
 
 class QuizResultFragment : Fragment() {
 
-    private lateinit var tvQuizResultTitle: TextView
-    private lateinit var tvResultMessage: TextView
+    private var _binding: FragmentQuizResultBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_quiz_result, container, false)
+    ): View {
+        _binding = FragmentQuizResultBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        tvQuizResultTitle = view.findViewById(R.id.tvQuizResultTitle)
-        tvResultMessage = view.findViewById(R.id.tvResultMessage)
+        // Back button listener to navigate to QuizFragment
+        binding.btnBackToQuiz.setOnClickListener {
+            val quizFragment = QuizFragment()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, quizFragment) // Replace with QuizFragment
+                .commit()
+        }
 
         // Retrieve the bundle arguments passed during fragment creation
         val message = arguments?.getString("message") ?: "No message"
         val score = arguments?.getInt("score")
 
-        tvResultMessage.text = message
-        tvQuizResultTitle.text = if (score != null) "Score: $score" else "No Score"
+        binding.tvResultMessage.text = message
+        binding.tvQuizResultTitle.text = if (score != null) "Score: $score" else "No Score"
 
-        Log.d("QuizResultFragment", "Quiz Result Title: ${tvQuizResultTitle.text}")
-        Log.d("QuizResultFragment", "Quiz Result Message: ${tvResultMessage.text}")
+        Log.d("QuizResultFragment", "Quiz Result Title: ${binding.tvQuizResultTitle.text}")
+        Log.d("QuizResultFragment", "Quiz Result Message: ${binding.tvResultMessage.text}")
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
