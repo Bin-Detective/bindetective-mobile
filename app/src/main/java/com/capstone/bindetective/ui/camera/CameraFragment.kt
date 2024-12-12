@@ -6,6 +6,7 @@ import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -40,7 +41,6 @@ class CameraFragment : Fragment() {
         private const val REQUEST_CAMERA = 101
         private const val REQUEST_GALLERY = 102
         private const val REQUEST_CAMERA_PERMISSION = 103
-        private const val REQUEST_WRITE_STORAGE_PERMISSION = 104
     }
 
     override fun onCreateView(
@@ -59,9 +59,14 @@ class CameraFragment : Fragment() {
     }
 
     private fun openGallery() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            Intent(MediaStore.ACTION_PICK_IMAGES) // Android 14+
+        } else {
+            Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI) // Below Android 14
+        }
         startActivityForResult(intent, REQUEST_GALLERY)
     }
+
 
     private fun takePicture() {
         val cameraPermission = Manifest.permission.CAMERA
