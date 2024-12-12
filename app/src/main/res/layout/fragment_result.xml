@@ -1,63 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:fitsSystemWindows="true">
 
-    <!-- Back Button -->
-    <ImageButton
-        android:id="@+id/btnBack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/back_button"
-        android:src="@drawable/ic_back_arrow"
-        tools:ignore="TouchTargetSizeCheck" />
-
-    <!-- ImageView to display the predicted image -->
-    <ImageView
-        android:id="@+id/ivPreview"
-        android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:layout_marginBottom="16dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_image" />
-
-    <!-- Section with different background color -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="#FFEB3D"
-        android:padding="16dp"
-        android:layout_marginBottom="16dp">
+        android:padding="16dp">
 
-        <!-- TextView to display Predicted Class -->
-        <TextView
-            android:id="@+id/tvPredictedClass"
+        <!-- Back Button -->
+        <ImageButton
+            android:id="@+id/btnBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Predicted Class: Plastic"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black"
-            android:layout_marginBottom="10dp" />
+            android:layout_gravity="start"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/back_button"
+            android:src="@drawable/ic_back_arrow"
+            tools:ignore="TouchTargetSizeCheck" />
 
-        <!-- TextView to display Waste Type -->
-        <TextView
-            android:id="@+id/tvWasteType"
-            android:layout_width="wrap_content"
+        <!-- ImageView to display the predicted image -->
+        <ImageView
+            android:id="@+id/ivPreview"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:layout_marginBottom="16dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_image" />
+
+        <!-- Section with different background color -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Waste Type: Non-recyclable"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black"
-            android:layout_marginBottom="10dp" />
+            android:orientation="vertical"
+            android:background="#FFEB3D"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp">
+
+            <!-- TextView to display Predicted Class -->
+            <TextView
+                android:id="@+id/tvPredictedClass"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Predicted Class: Plastic"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="10dp" />
+
+            <!-- TextView to display Waste Type -->
+            <TextView
+                android:id="@+id/tvWasteType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Waste Type: Non-recyclable"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="10dp" />
+        </LinearLayout>
+
     </LinearLayout>
-
-</LinearLayout>
+</ScrollView>
