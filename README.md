@@ -6,7 +6,7 @@ BinDetective is an Android application that provides features like authenticatio
 
 # Download APK
 
-Download the BinDetective APK to install the app on your Android device.
+[Download the BinDetective APK](https://drive.google.com/drive/u/0/folders/1Scev4vHEYFxyjMBg04sSrOEOu0B7FnEe)
 
 ---
 
